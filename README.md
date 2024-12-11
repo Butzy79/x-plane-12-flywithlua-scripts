@@ -38,7 +38,13 @@ Integrates the **A320neo (A20N)** and other **Toliss aircraft** with the **Self-
 
 #### XPUIPC Configuration:
 1. Locate the `XPUIPCOffsets.cfg` file in the XPUIPC directory.
-2. Open the file with
+2. Open the file with an editor and add:
+```
+# SELF-LOADING CARGO DOORS
+# Declarations of all doors datarefs
+Dataref A20NDoorStatus sim/cockpit2/switches/canopy_open int
+Offset    0x3367    UINT8    1    rw    $A20NDoorStatus
+```
 
 Read the .lua file carefully for complete setup instructions.
 ## Requirements
