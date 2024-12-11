@@ -1,5 +1,5 @@
 -- ****************************************************************************
--- X-PLANE AIRCRAFT SEATBELT SIGN COMPATIBILITY FOR SELF-LOADING CARGO!
+-- X-PLANE AIRCRAFT DOORS COMPATIBILITY FOR SELF-LOADING CARGO!
 -- ****************************************************************************
 -- 
 -- Written by Ricky S. (Manta32). 
