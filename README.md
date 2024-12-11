@@ -51,8 +51,11 @@ Read the .lua file carefully for complete setup instructions.
 
 - **X-Plane 12**
 - **FlyWithLua** plugin
-- **XPUIPC** (required only for `TolissA20NDoors.lua`)
-
+- **XPUIPC** (required only for `TolissA20NDoors.lua`) version **2.0.5.9** (can be downloaded here: https://fsacars.com/downloads/xpuipc/index.html)
+### IMPORTANT
+The doors are considered `OPEN` only if you set them to `OPEN` in the ToLiss EFB.  
+The `AUTO` value is considered `CLOSE` by the plugin.  
+Please use only `OPEN` or `CLOSE` values.
 ---
 
 Happy flying! ✈️  
