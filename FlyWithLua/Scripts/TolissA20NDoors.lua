@@ -18,7 +18,11 @@
 -- Please copy and paste the following four lines of code to the BOTTOM of your 
 -- XPUIPCOffsets.cfg file in your xplane/resources/plugins/xpuipc folder, then 
 -- remove the "-- " characters from the start of each line).
---
+-- XPUIP version 2.0.5.9 is required.
+-- ### IMPORTANT ###
+-- The doors are considered `OPEN` only if you set them to `OPEN` in the ToLiss EFB.
+-- The `AUTO` value is considered `CLOSE` by the plugin.
+-- Please use only `OPEN` or `CLOSE` values.
 -- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 -- 
 -- # SELF-LOADING CARGO DOORS
