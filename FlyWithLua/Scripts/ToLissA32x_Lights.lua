@@ -72,4 +72,19 @@ function handle_lights()
     inject_lights_status()
 end
 
-do_often("handle_lights()")
+function verify_aircraft()
+      local aircraft = {
+        ["A319"] = true,
+        ["A20N"] = true,
+        ["A321"] = true,
+        ["A333"] = true,
+        ["A339"] = true,
+        ["A346"] = true
+    }
+    local actionableAircraftResult = aircraft[PLANE_ICAO]
+    if (actionableAircraftResult) then
+        handle_lights()
+    end
+end
+
+do_often("verify_aircraft()")
