@@ -21,6 +21,14 @@ local lights_buttons = {
         navandlogo_lights_2 = -1,
         navandlogo_lights_off = -1,
 }
+local aircraft = {
+        ["A319"] = true,
+        ["A20N"] = true,
+        ["A321"] = true,
+        ["A333"] = true,
+        ["A339"] = true,
+        ["A346"] = true
+}
 local lights_status_value = { [0] = 0, 0, 0, 0, 0, 0, 0, 0 }
 local lightSwitches = dataref_table( "AirbusFBW/OHPLightSwitches" )
 --	lightSwitches[0] -- BEACON
@@ -73,14 +81,6 @@ function handle_lights()
 end
 
 function verify_aircraft()
-      local aircraft = {
-        ["A319"] = true,
-        ["A20N"] = true,
-        ["A321"] = true,
-        ["A333"] = true,
-        ["A339"] = true,
-        ["A346"] = true
-    }
     local actionableAircraftResult = aircraft[PLANE_ICAO]
     if (actionableAircraftResult) then
         handle_lights()
