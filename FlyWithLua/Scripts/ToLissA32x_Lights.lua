@@ -48,94 +48,26 @@ function inject_lights_status()
 end
 
 function handle_lights()
-    if lights_buttons.landing_lights_left_on >=0 and button(lights_buttons.landing_lights_left_on) then
-      lights_status_value[4] = 2
+    local function set_light_dual_status(button_on, button_off, switch_idx, value_on, value_off)
+        if button_on >= 0 and button(button_on) then lights_status_value[switch_idx] = value_on end
+        if button_off >= 0 and button(button_off) then lights_status_value[switch_idx] = value_off end
+        if button_on < 0 and button_off < 0 then lights_status_value[switch_idx] = lightSwitches[switch_idx] end
     end
-    if lights_buttons.landing_lights_left_off >=0 and button(lights_buttons.landing_lights_left_off) then
-      lights_status_value[4] = 0
+    local function set_light_tri_status(button_on, button_mid, button_off, switch_idx, value_on, value_mid, value_off)
+        if button_off >= 0 and button(button_off) then lights_status_value[switch_idx] = value_off end
+        if button_mid >= 0 and button(button_mid) then lights_status_value[switch_idx] = value_mid end
+        if button_on >= 0 and button(button_on) then lights_status_value[switch_idx] = value_on end
+        if button_on < 0 and button_mid < 0 and button_off < 0 then lights_status_value[switch_idx] = lightSwitches[switch_idx] end
     end
-    if lights_buttons.landing_lights_left_on <0 and lights_buttons.landing_lights_left_off <0 then
-      lights_status_value[4] = lightSwitches[4]
-    end
+    set_light_dual_status(lights_buttons.landing_lights_left_on, lights_buttons.landing_lights_left_off, 4, 2, 0)
+    set_light_dual_status(lights_buttons.landing_lights_right_on, lights_buttons.landing_lights_right_off, 5, 2, 0)
+    set_light_dual_status(lights_buttons.wings_lights_on, lights_buttons.wings_lights_off, 1, 1, 0)
+    set_light_dual_status(lights_buttons.runeway_turnoff_lights_on, lights_buttons.runeway_turnoff_lights_off, 6, 1, 0)
+    set_light_dual_status(lights_buttons.beacon_lights_on, lights_buttons.beacon_lights_off, 0, 1, 0)
 
-    if lights_buttons.landing_lights_right_on >=0 and button(lights_buttons.landing_lights_right_on) then
-      lights_status_value[5] = 2
-    end
-    if lights_buttons.landing_lights_right_off >=0 and button(lights_buttons.landing_lights_right_off) then
-      lights_status_value[5] = 0
-    end
-    if lights_buttons.landing_lights_right_on <0 and lights_buttons.landing_lights_right_off <0 then
-      lights_status_value[5] = lightSwitches[5]
-    end
-
-    if lights_buttons.strobe_lights_off >=0 and button(lights_buttons.strobe_lights_off) then
-      lights_status_value[7] = 0
-    end
-    if lights_buttons.strobe_lights_auto >=0 and button(lights_buttons.strobe_lights_auto) then
-      lights_status_value[7] = 1
-    end
-    if lights_buttons.strobe_lights_on >=0 and button(lights_buttons.strobe_lights_on) then
-      lights_status_value[7] = 2
-    end
-    if lights_buttons.strobe_lights_off <0 and lights_buttons.strobe_lights_auto <0 and lights_buttons.strobe_lights_on <0 then
-      lights_status_value[7] = lightSwitches[7]
-    end
-
-    if lights_buttons.wings_lights_on >=0 and button(lights_buttons.wings_lights_on) then
-      lights_status_value[1] = 1
-    end
-    if lights_buttons.wings_lights_off >=0 and button(lights_buttons.wings_lights_off) then
-      lights_status_value[1] = 0
-    end
-    if lights_buttons.wings_lights_on <0 and lights_buttons.wings_lights_off <0 then
-      lights_status_value[1] = lightSwitches[1]
-    end
-
-    if lights_buttons.runeway_turnoff_lights_on >=0 and button(lights_buttons.runeway_turnoff_lights_on) then
-      lights_status_value[6] = 1
-    end
-    if lights_buttons.runeway_turnoff_lights_off >=0 and button(lights_buttons.runeway_turnoff_lights_off) then
-      lights_status_value[6] = 0
-    end
-    if lights_buttons.runeway_turnoff_lights_on <0 and lights_buttons.runeway_turnoff_lights_off <0 then
-      lights_status_value[6] = lightSwitches[6]
-    end
-                      
-    if lights_buttons.beacon_lights_off >=0 and button(lights_buttons.beacon_lights_off) then
-      lights_status_value[0] = 0
-    end
-    if lights_buttons.beacon_lights_on >=0 and button(lights_buttons.beacon_lights_on) then
-      lights_status_value[0] = 1
-    end
-    if lights_buttons.beacon_lights_off <0 and lights_buttons.beacon_lights_on <0 then
-      lights_status_value[0] = lightSwitches[0]
-    end
-
-    if lights_buttons.nose_off_lights >=0 and button(lights_buttons.nose_off_lights) then
-      lights_status_value[3] = 0
-    end 
-    if lights_buttons.nose_taxi_lights >=0 and button(lights_buttons.nose_taxi_lights) then
-      lights_status_value[3] = 1
-    end
-    if lights_buttons.nose_takeoff_lights >=0 and button(lights_buttons.nose_takeoff_lights) then
-      lights_status_value[3] = 2
-    end
-    if lights_buttons.nose_off_lights <0 and lights_buttons.nose_taxi_lights <0 and lights_buttons.nose_takeoff_lights <0 then
-      lights_status_value[3] = lightSwitches[3]
-    end
-
-    if lights_buttons.navandlogo_lights_off >=0 and button(lights_buttons.navandlogo_lights_off) then
-      lights_status_value[2] = 0
-    end 
-    if lights_buttons.navandlogo_lights_1 >=0 and button(lights_buttons.navandlogo_lights_1) then
-      lights_status_value[2] = 1
-    end
-    if lights_buttons.navandlogo_lights_2 >=0 and button(lights_buttons.navandlogo_lights_2) then
-      lights_status_value[2] = 2
-    end
-    if lights_buttons.navandlogo_lights_off <0 and lights_buttons.navandlogo_lights_1 <0 and lights_buttons.navandlogo_lights_2 <0 then
-      lights_status_value[2] = lightSwitches[2]
-    end
+    set_light_tri_status(lights_buttons.strobe_lights_on, lights_buttons.strobe_lights_auto, lights_buttons.strobe_lights_off, 7, 2, 1, 0)
+    set_light_tri_status(lights_buttons.nose_takeoff_lights, lights_buttons.nose_taxi_lights, lights_buttons.nose_off_lights, 3, 2, 1, 0)
+    set_light_tri_status(lights_buttons.navandlogo_lights_2, lights_buttons.navandlogo_lights_1, lights_buttons.navandlogo_lights_off, 2, 2, 1, 0)
 
     inject_lights_status()
 end
