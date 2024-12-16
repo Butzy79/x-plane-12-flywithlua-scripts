@@ -115,4 +115,4 @@ function handle_lights()
     inject_lights_status()
 end
 
-do_every_frame("handle_lights()")
+do_often("handle_lights()")
