@@ -35,4 +35,4 @@ function handle_thrust_reverse()
 end
 
 -- Register the function to run every frame
-do_every_draw("handle_thrust_reverse()")
+do_every_frame("handle_thrust_reverse()")
