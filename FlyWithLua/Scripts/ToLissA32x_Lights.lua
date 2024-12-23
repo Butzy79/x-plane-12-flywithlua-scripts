@@ -29,8 +29,10 @@ local aircraft = {
         ["A339"] = true,
         ["A346"] = true
 }
+local actionableAircraftResult = aircraft[PLANE_ICAO]
+
 local lights_status_value = { [0] = 0, 0, 0, 0, 0, 0, 0, 0 }
-local lightSwitches = dataref_table( "AirbusFBW/OHPLightSwitches" )
+local lightSwitches = { [0] = 0, 0, 0, 0, 0, 0, 0, 0 }
 --	lightSwitches[0] -- BEACON
 --	lightSwitches[1] -- WINGS
 --	lightSwitches[2] -- NAV and LOGO
@@ -40,8 +42,11 @@ local lightSwitches = dataref_table( "AirbusFBW/OHPLightSwitches" )
 --	lightSwitches[6] -- RWY TURNOFF
 --	lightSwitches[7] -- STROBE
 function initialize_lights_status()
-    for i = 0, 7 do
-        lights_status_value[i] = lightSwitches[i]
+    if (actionableAircraftResult) then
+        local lightSwitches = dataref_table( "AirbusFBW/OHPLightSwitches" )
+        for i = 0, 7 do
+            lights_status_value[i] = lightSwitches[i]
+        end
     end
 end
 
@@ -81,10 +86,9 @@ function handle_lights()
 end
 
 function verify_aircraft()
-    local actionableAircraftResult = aircraft[PLANE_ICAO]
-    if (actionableAircraftResult) then
         handle_lights()
-    end
 end
 
-do_often("verify_aircraft()")
+if (actionableAircraftResult) then
+    do_often("verify_aircraft()")
+end
