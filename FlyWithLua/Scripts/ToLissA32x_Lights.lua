@@ -33,17 +33,17 @@ local actionableAircraftResult = aircraft[PLANE_ICAO]
 
 local lights_status_value = { [0] = 0, 0, 0, 0, 0, 0, 0, 0 }
 local lightSwitches = { [0] = 0, 0, 0, 0, 0, 0, 0, 0 }
---	lightSwitches[0] -- BEACON
---	lightSwitches[1] -- WINGS
---	lightSwitches[2] -- NAV and LOGO
---	lightSwitches[3] -- NOSE WHEEL
---	lightSwitches[4] -- LANDING LEFT
---	lightSwitches[5] -- LANDING RIGHT
---	lightSwitches[6] -- RWY TURNOFF
---	lightSwitches[7] -- STROBE
+--  lightSwitches[0] -- BEACON
+--  lightSwitches[1] -- WINGS
+--  lightSwitches[2] -- NAV and LOGO
+--  lightSwitches[3] -- NOSE WHEEL
+--  lightSwitches[4] -- LANDING LEFT
+--  lightSwitches[5] -- LANDING RIGHT
+--  lightSwitches[6] -- RWY TURNOFF
+--  lightSwitches[7] -- STROBE
 function initialize_lights_status()
     if (actionableAircraftResult) then
-        local lightSwitches = dataref_table( "AirbusFBW/OHPLightSwitches" )
+        lightSwitches = dataref_table( "AirbusFBW/OHPLightSwitches" )
         for i = 0, 7 do
             lights_status_value[i] = lightSwitches[i]
         end
