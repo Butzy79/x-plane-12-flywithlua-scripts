@@ -272,6 +272,9 @@ function tobusBoarding()
 end
 
 function settings_toboolean(str)
+    if str == nil then
+        str = 'false'
+    end
     local bool = false
     if str == "true" or str == true then
         bool = true
@@ -302,10 +305,10 @@ local function readSettings()
     LEAVE_DOOR1_OPEN = settings_toboolean(settings.doors.leaveDoor1Open)
     LEAVE_DOOR1_OPEN_DEBOARD = settings_toboolean(settings.doors.leaveDoor1OpenDeboard)
 
-    WINDOW_X  = tonumber(settings.general.x)
-    WINDOW_Y  = tonumber(settings.general.y)
-    WINDOW_WIDTH  = tonumber(settings.general.width)
-    WINDOW_HEIGHT  = tonumber(settings.general.height)
+    WINDOW_X  = tonumber(settings.general.x) or WINDOW_X
+    WINDOW_Y  = tonumber(settings.general.y) or WINDOW_Y
+    WINDOW_WIDTH  = tonumber(settings.general.width) or WINDOW_WIDTH
+    WINDOW_HEIGHT  = tonumber(settings.general.height) or WINDOW_HEIGHT
     STARTUP_VIEW = settings_toboolean(settings.general.startup)
 end
 
