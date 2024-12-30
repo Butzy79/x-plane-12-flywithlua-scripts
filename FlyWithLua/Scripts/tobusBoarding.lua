@@ -385,17 +385,17 @@ function tobusOnBuild(tobus_window, x, y)
 
     if boardingCompleted then
         imgui.PushStyleColor(imgui.constant.Col.Text, 0xFF43B54B)
-        imgui.TextUnformatted("Boarding completed!!!")
+        imgui.TextUnformatted("Boarding completed.")
         imgui.PopStyleColor()
     end
 
     if deboardingCompleted then
-        imgui.PushStyleColor(imgui.constant.Col.Text, 0xFF43B54B)
-        imgui.TextUnformatted("Deboarding completed!!!")
+        imgui.PushStyleColor(imgui.constant.Col.Text, 0xFF87CEFA)
+        imgui.TextUnformatted("Deboarding completed.")
         imgui.PopStyleColor()
     end
 
-    if not (boardingActive or deboardingActive) then
+    if not (boardingActive or boardingPaused or deboardingActive or deboardingPaused or boardingCompleted or deboardingCompleted) then
         local pn = tls_no_pax[0]
         if not intended_no_pax_set or passengersBoarded ~= pn  then
             intendedPassengerNumber = pn
@@ -409,26 +409,49 @@ function tobusOnBuild(tobus_window, x, y)
             intendedPassengerNumber = newPassengerNumber
             intended_no_pax_set = true
         end
-        imgui.SameLine()
 
-        if imgui.Button("Get from simbrief") then
-            if fetchData() then
-                readXML()
+        if not boardingCompleted then
+            imgui.SameLine()
+            if imgui.Button("Get from simbrief") then
+                set("AirbusFBW/NoPax", 0)
+                command_once("AirbusFBW/SetWeightAndCG")
+                if fetchData() then
+                    readXML()
+                    intended_no_pax_set = true
+                end
+            end
+
+            if imgui.Button("Set random passenger number") then
+                setRandomNumberOfPassengers()
                 intended_no_pax_set = true
             end
+        else
+            imgui.Spacing()
         end
-
-        if imgui.Button("Set random passenger number") then
-            setRandomNumberOfPassengers()
-            intended_no_pax_set = true
-        end
-
+    end
+    
+    if not deboardingActive and deboardingPaused then
+        imgui.PushStyleColor(imgui.constant.Col.Text, 0xFF95FFF8)
+        imgui.TextUnformatted(string.format("Remaining passengers to deboard: %s / %s", passengersBoarded, intendedPassengerNumber))
+        imgui.PopStyleColor()
     end
 
-    if not boardingActive and not deboardingActive then
-        imgui.SameLine()
+    if not boardingActive and boardingPaused then
+        imgui.PushStyleColor(imgui.constant.Col.Text, 0xFFFFD700)
+        imgui.TextUnformatted(string.format("Remaining passengers to board: %s / %s", intendedPassengerNumber-passengersBoarded, intendedPassengerNumber))
+        imgui.PopStyleColor()
+    end
 
-        if not deboardingPaused then
+    if boardingCompleted then
+        imgui.PushStyleColor(imgui.constant.Col.Text, 0xFFFFD700)
+        imgui.TextUnformatted(string.format("Passenger Onboard N. %s", passengersBoarded))
+        imgui.PopStyleColor()
+    end
+
+    if not boardingActive and not deboardingActive and not boardingPaused then
+
+        if not deboardingPaused and not boardingCompleted and intendedPassengerNumber > 0 and not deboardingCompleted then
+            imgui.SameLine()
             if imgui.Button("Start Boarding") then
                 set("AirbusFBW/NoPax", 0)
                 set("AirbusFBW/PaxDistrib", math.random(35, 60) / 100)
@@ -445,9 +468,7 @@ function tobusOnBuild(tobus_window, x, y)
             end
         end
 
-        imgui.SameLine()
-
-        if not boardingPaused then
+        if not boardingPaused and boardingCompleted then
             if imgui.Button("Start Deboarding") then
                 passengersBoarded = intendedPassengerNumber
                 startBoardingOrDeboarding()
@@ -473,6 +494,9 @@ function tobusOnBuild(tobus_window, x, y)
         if imgui.Button("Resume Boarding") then
             boardingActive = true
             boardingPaused = false
+            if boardingSpeedMode == 1 then
+                boardInstantly()
+            end
         end
     end
 
@@ -487,18 +511,28 @@ function tobusOnBuild(tobus_window, x, y)
         if imgui.Button("Resume Deboarding") then
             deboardingActive = true
             deboardingPaused = false
+            if boardingSpeedMode == 1 then
+                deboardInstantly()
+            end
         end
     end
 
     if boardingPaused or deboardingPaused or boardingCompleted or deboardingCompleted then
-        imgui.SameLine()
-        if imgui.Button("Reset") then
+        local txt_btn = "Flight completed! Reset"
+        if not deboardingCompleted then
+            imgui.SameLine()
+            txt_btn = "Reset"
+        end
+        
+        if imgui.Button(txt_btn) then
+            set("AirbusFBW/NoPax", 0)
+            command_once("AirbusFBW/SetWeightAndCG")
             resetAllParameters()
             closeDoorsAfterBoarding(false)
         end
     end
 
-    if not boardingActive and not deboardingActive then
+    if not boardingActive and not deboardingActive and not deboardingCompleted then
         if imgui.RadioButton("Instant", boardingSpeedMode == 1) then
             boardingSpeedMode = 1
         end
@@ -673,6 +707,7 @@ if STARTUP_VIEW then
 end
 if AUTO_FETCH_SIMBRIEF then
     set("AirbusFBW/NoPax", 0)
+    command_once("AirbusFBW/SetWeightAndCG")
     if fetchData() then
         readXML()
         intended_no_pax_set = true
