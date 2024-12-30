@@ -12,7 +12,7 @@ STARTUP_VIEW = true
 AUTO_FETCH_SIMBRIEF = true
 -- end --
 
-local VERSION = "1.0.0-manta32"
+local VERSION = "1.0.1-manta32"
 logMsg("TOBUS " .. VERSION .. " startup")
 
  --http library import
