@@ -157,7 +157,7 @@ end
 
 local function resetAllParameters()
     passengersBoarded = 0
-    intendedPassengerNumber = math.floor(MAX_PAX_NUMBER * 0.66)
+    intendedPassengerNumber = 0
     boardingActive = false
     deboardingActive = false
     nextTimeBoardingCheck = os.time()
@@ -411,7 +411,6 @@ function tobusOnBuild(tobus_window, x, y)
         end
 
         if not boardingCompleted then
-            imgui.SameLine()
             if imgui.Button("Get from simbrief") then
                 set("AirbusFBW/NoPax", 0)
                 command_once("AirbusFBW/SetWeightAndCG")
@@ -420,11 +419,12 @@ function tobusOnBuild(tobus_window, x, y)
                     intended_no_pax_set = true
                 end
             end
-
+            imgui.SameLine(155)
             if imgui.Button("Set random passenger number") then
                 setRandomNumberOfPassengers()
                 intended_no_pax_set = true
             end
+            imgui.Separator()
         else
             imgui.Spacing()
         end
@@ -451,7 +451,6 @@ function tobusOnBuild(tobus_window, x, y)
     if not boardingActive and not deboardingActive and not boardingPaused then
 
         if not deboardingPaused and not boardingCompleted and intendedPassengerNumber > 0 and not deboardingCompleted then
-            imgui.SameLine()
             if imgui.Button("Start Boarding") then
                 set("AirbusFBW/NoPax", 0)
                 set("AirbusFBW/PaxDistrib", math.random(35, 60) / 100)
