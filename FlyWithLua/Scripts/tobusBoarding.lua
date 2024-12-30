@@ -31,7 +31,8 @@ local intended_no_pax_set = false
 local tls_no_pax        -- dataref_table
 local MAX_PAX_NUMBER = 224
 
-local SETTINGS_FILENAME = "/tobus/tobus_settings.ini"
+local SETTINGS_FILENAME = "tobus_settings.ini"
+local SETTINGS_DIRECTORY = "tobus"
 local SIMBRIEF_FLIGHTPLAN_FILENAME = "simbrief.xml"
 local SIMBRIEF_ACCOUNT_NAME = ""
 local RANDOMIZE_SIMBRIEF_PASSENGER_NUMBER = false
@@ -44,6 +45,53 @@ local jw1_connected = false     -- set if an opensam jw at the second door is de
 local opensam_door_status = nil
 if nil ~= XPLMFindDataRef("opensam/jetway/door/status") then
 	opensam_door_status = dataref_table("opensam/jetway/door/status")
+end
+
+local function createDirectoryIfNotExists()
+    local file = io.open(SCRIPT_DIRECTORY..'/'..SETTINGS_DIRECTORY .. "/"..SETTINGS_FILENAME, "r")
+    if file then
+        file:close()
+    else
+        local success = os.execute('mkdir "' .. SCRIPT_DIRECTORY..'/'..SETTINGS_DIRECTORY .. '"')
+        if success then
+            logMsg("Directory created: " .. SCRIPT_DIRECTORY..'/'..SETTINGS_DIRECTORY)
+        else
+            logMsg("Failed to create directory: " .. SCRIPT_DIRECTORY..'/'..SETTINGS_DIRECTORY)
+        end
+    end
+end
+
+local function createFileIfNotExists()
+    local file = io.open(SCRIPT_DIRECTORY..'/'..SETTINGS_DIRECTORY..'/'..SETTINGS_FILENAME, "r")
+    if not file then
+        file = io.open(SCRIPT_DIRECTORY..'/'..SETTINGS_DIRECTORY..'/'..SETTINGS_FILENAME, "w")
+        if file then
+            local content = [[
+[simbrief]
+username=
+randomizePassengerNumber=true
+auto_fetch=true
+
+[doors]
+closeDoors=true
+leaveDoor1Open=false
+leaveDoor1OpenDeboard=true
+useSecondDoor=false
+
+[general]
+x=100
+y=230
+width=800
+height=250
+startup=true
+]]
+            file:write(content)
+        end
+        file:close()
+        logMsg("File created: " .. SCRIPT_DIRECTORY..'/'..SETTINGS_DIRECTORY..'/'..SETTINGS_FILENAME)
+    else
+        file:close()
+    end
 end
 
 local function openDoorsForBoarding()
@@ -233,11 +281,11 @@ end
 
 
 local function readSettings()
-    local f = io.open(SCRIPT_DIRECTORY..SETTINGS_FILENAME)
+    local f = io.open(SCRIPT_DIRECTORY..'/'..SETTINGS_DIRECTORY..'/'..SETTINGS_FILENAME)
     if f == nil then return end
 
     f:close()
-    local settings = LIP.load(SCRIPT_DIRECTORY..SETTINGS_FILENAME)
+    local settings = LIP.load(SCRIPT_DIRECTORY..'/'..SETTINGS_DIRECTORY..'/'..SETTINGS_FILENAME)
 
     settings.simbrief = settings.simbrief or {}    -- for backwards compatibility
     settings.doors = settings.doors or {}
@@ -282,8 +330,8 @@ local function saveSettings()
     newSettings.doors.leaveDoor1Open = LEAVE_DOOR1_OPEN
     newSettings.doors.leaveDoor1OpenDeboard = LEAVE_DOOR1_OPEN_DEBOARD
 
-    LIP.save(SCRIPT_DIRECTORY..SETTINGS_FILENAME, newSettings)
-    logMsg("tobus: done")
+    LIP.save(SCRIPT_DIRECTORY..'/'..SETTINGS_DIRECTORY..'/'..SETTINGS_FILENAME, newSettings)
+    logMsg("tobus file: done")
 end
 
 local function fetchData()
@@ -359,6 +407,9 @@ end
 
 logMsg(string.format("tobus: plane: %s, MAX_PAX_NUMBER: %d", PLANE_ICAO, MAX_PAX_NUMBER))
 
+-- crete subfolder and first ini settings
+createDirectoryIfNotExists()
+createFileIfNotExists()
 -- init gloabl variables
 readSettings()
 
