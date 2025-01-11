@@ -44,7 +44,7 @@ end
 function omniloadhubMainLoop()
 
     local arm_fuel = 24 -- meeters
-    local mac = 4.29 --  meeters
+    local mac = 4.29 --  meeters Mean Aerodynamic Chord
     local le_mac = 20 --  meeters
 
 
