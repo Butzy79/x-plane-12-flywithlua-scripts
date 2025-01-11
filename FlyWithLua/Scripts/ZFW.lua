@@ -1,6 +1,13 @@
 local omniloadhub = {
     title = "omniloadhub",
     version = "0.0.1",
+    params_airplane = {
+        zfw = 0,
+        zfwcg = 0,
+        gwcg = 0,
+        f_blk = 0,
+        flt_no = nil,
+    },
     settings = {
         window = {
             window_width = 400,
@@ -26,6 +33,10 @@ function openomniloadhubWindow()
 end
 
 function viewomniloadhubWindow()
+    for key in pairs(omniloadhub.params_airplane) do
+        imguiText(key, omniloadhub.params_airplane[key])
+    end
+
     imguiText("Ground", omniloadhub_onground_any)
 end
 
